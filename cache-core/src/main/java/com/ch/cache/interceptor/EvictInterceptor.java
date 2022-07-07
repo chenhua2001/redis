@@ -22,5 +22,8 @@ public class EvictInterceptor<K,V> implements CacheInterceptor<K,V> {
             K key = (K) context.args()[0];
             evict.update(key);//在这些方法完成之后，更新key的位置
         }
+        if(context.method().getName().equals("remove")) {
+            evict.removeKey((K)context.args()[0]);
+        }
     }
 }

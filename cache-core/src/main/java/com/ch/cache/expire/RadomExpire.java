@@ -1,5 +1,7 @@
 package com.ch.cache.expire;
 
+import com.ch.cache.core.ICache;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -8,12 +10,11 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
-public class RadomExpire<K> extends AbstarctExpire<K>{
-    HashMap<K,Long> expireMap;
+public class RadomExpire<K> extends AbstarctExpire<K> implements ScheduleCheck{
+
 
     public RadomExpire() {
-        this.expireMap = new HashMap<>();
-        startScheduleExpire();
+        super();
     }
 
     @Override
@@ -26,24 +27,13 @@ public class RadomExpire<K> extends AbstarctExpire<K>{
         return expireMap.get(key);
     }
 
-    private void startScheduleExpire(){
-        ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1, new ThreadFactory() {
-            @Override
-            public Thread newThread(Runnable r) {
-                Thread thread = new Thread(r);
-                thread.setName("随机选取开头进行删除");
-                return thread;
-            }
-        });
-        executorService.scheduleAtFixedRate(new Runnable() {
-            @Override
-            public void run() {
-                removeFromRandom();
-            }
-        },0,1, TimeUnit.SECONDS);
+    @Override
+    public String type() {
+        return "随机删除";
     }
 
-    private void removeFromRandom() {
+    @Override
+    public void check(ICache cache) {
         long startTime=System.currentTimeMillis();
         int count=0;
         int start=(int)(Math.random()*expireMap.size());
@@ -67,5 +57,20 @@ public class RadomExpire<K> extends AbstarctExpire<K>{
             if(System.currentTimeMillis()-startTime>=limitTime)
                 changeToFastMode();
         }
+    }
+
+    @Override
+    public long initDelay() {
+        return 0;
+    }
+
+    @Override
+    public long period() {
+        return 5;
+    }
+
+    @Override
+    public TimeUnit timeUnit() {
+        return TimeUnit.SECONDS;
     }
 }

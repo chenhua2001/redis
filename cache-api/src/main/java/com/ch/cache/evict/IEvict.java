@@ -3,6 +3,7 @@ package com.ch.cache.evict;
 
 import com.ch.cache.model.CacheEvictContext;
 import com.ch.cache.model.EvictContext;
+import com.ch.cache.model.IRemoveContext;
 
 public interface IEvict<K,V> {
     K getEvictKey();

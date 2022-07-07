@@ -15,7 +15,7 @@ public class TwiceLRUEvict<K,V> implements IEvict<K,V>{
     }
 
     @Override
-    public EvictContext<K, V> evict(CacheEvictContext<K, V> context) {
+    public EvictContext<K,V> evict(CacheEvictContext<K, V> context) {
         ICache<K, V> cache = context.cache();
         K key = context.key();
         int limitSize = context.limitSize();
@@ -24,7 +24,7 @@ public class TwiceLRUEvict<K,V> implements IEvict<K,V>{
             K evictKey = getEvictKey();
             V evictValue = cache.remove(evictKey);
             map.remove(evictKey);
-            evictContext=new EvictContext<>(evictKey,evictValue);
+            evictContext=new EvictContext<K,V>().key(evictKey).value(evictValue);
         }
         return evictContext;
     }

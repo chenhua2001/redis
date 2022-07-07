@@ -5,6 +5,9 @@ import com.ch.cache.inteceptor.Intercept;
 import com.ch.cache.interceptor.CacheInterceptors;
 import com.ch.cache.interceptor.EvictInterceptor;
 import com.ch.cache.interceptor.PersistInterceptor;
+import com.ch.cache.listener.ISlowListener;
+import com.ch.cache.listener.SlowListener;
+import com.ch.cache.listener.SlowListenerContext;
 import com.ch.cache.model.CacheInterceptorContext;
 import com.ch.cache.model.CacheProxyContext;
 import com.ch.cache.model.ICacheInterceptorContext;
@@ -28,12 +31,21 @@ public class CacheBS{
         Method method = context.method();
         this.cache=context.iCache();
         CacheInterceptorContext interceptorContext = new CacheInterceptorContext().method(method).args(args).cache(this.cache);
+        //慢操作记录开始时间
+        long startTime=System.currentTimeMillis();
         //拦截器执行
         preHandler(interceptorContext);
         //执行方法
         Object object= method.invoke(this.cache,args);
         //拦截器执行
         afterHandler(interceptorContext);
+        //慢操作监听器监听内存
+        long endTime=System.currentTimeMillis();
+        long time=endTime-startTime;
+        ISlowListener slowListener=cache.slowListener();
+        SlowListenerContext slowListenerContext = new SlowListenerContext().methodName(method.getName()).args(args).spendTime(time);
+        if(time>=slowListener.slowTimeLimited())
+            slowListener.listen(slowListenerContext);
         return object;
     }
 

@@ -1,6 +1,7 @@
 package com.ch.cache.evict;
 
 import com.ch.cache.core.ICache;
+
 import com.ch.cache.model.CacheEvictContext;
 import com.ch.cache.model.EvictContext;
 import com.ch.cache.struct.ILinkedHashMap;
@@ -19,7 +20,7 @@ public class SimpleLRUEvict<K,V> implements IEvict<K,V>{
     }
 
     @Override
-    public EvictContext<K, V> evict(CacheEvictContext<K, V> context) {
+    public EvictContext<K,V> evict(CacheEvictContext<K, V> context) {
         ICache<K, V> cache = context.cache();
         K key = context.key();
         int limitSize = context.limitSize();
@@ -29,7 +30,7 @@ public class SimpleLRUEvict<K,V> implements IEvict<K,V>{
             V evictValue = cache.remove(evictKey);
             cache.remove(evictKey);
             linkedHashMap.remove(evictKey);//将linkedHashMap中的元素也移除
-            evictInfo=new EvictContext<K,V>(evictKey,evictValue);
+            evictInfo=new EvictContext<K,V>().key(evictKey).value(evictValue);
         }
         return evictInfo;
     }
