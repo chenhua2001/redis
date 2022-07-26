@@ -67,3 +67,10 @@ ScheduleRemove类中，我们使用了周期性线程池来执行每一个Schedu
 解决方法：
     传入ScheduleRemove类中的cache我们使用代理，那么代理执行remove就会进行Evict拦截器拦截，然后删除对应的key
     //暂时还不能确定这样是不是太好，因为反射会效率较低，但是我又不想在Expire类中用到evict类
+##7-26懒模式过期策略
+思路：在需要进行检查的方法上注释
+代理调用该方法时，调用拦截器拦截，并且进行key的检查（IExpire类的refresh）
+### 问题1：取一个key的时候，单独对该key进行过期检查
+如果该方法是get，就只将当前第一个参数包装为Collection然后传入refresh方法中
+### 问题2：取很多key的时候，比如将所有key-value都取出来的时候，全部进行过期检查
+对key或者是过期的key较小的一方进行refresh

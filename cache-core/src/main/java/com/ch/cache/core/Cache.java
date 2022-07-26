@@ -17,10 +17,7 @@ import com.ch.cache.proxy.CacheFactory;
 import com.ch.cache.proxy.Cacher;
 import com.ch.cache.utils.HashUtils;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Cache<K,V> implements ICache<K,V>{
@@ -163,13 +160,32 @@ public class Cache<K,V> implements ICache<K,V>{
         return persist;
     }
 
+
+    @Intercept(refresh = true)
     @Override
     public Set<Map.Entry<K,V>> entrySet() {
         return table.entrySet();
     }
 
+    @Intercept(refresh = true)
+    @Override
+    public Set<K> keys() {
+        return table.keySet();
+    }
+
+    @Intercept(refresh = true)
+    @Override
+    public Collection<V> values() {
+        return table.values();
+    }
+
     public ISlowListener slowListener() {
         return slowListener;
+    }
+
+    @Override
+    public IExpire<K> expire() {
+        return expire;
     }
 
     @Override

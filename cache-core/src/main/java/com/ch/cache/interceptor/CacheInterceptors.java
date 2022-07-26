@@ -17,4 +17,9 @@ public class CacheInterceptors {
         persistInterceptors.add(new PersistInterceptor());
         return persistInterceptors;
     }
+    public static List<RefreshInterceptor> getRefreshInterceptors(){
+        ArrayList<RefreshInterceptor> refreshInterceptors=new ArrayList<>();
+        refreshInterceptors.add(new RefreshInterceptor());
+        return refreshInterceptors;
+    }
 }

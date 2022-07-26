@@ -1,9 +1,13 @@
 package com.ch.cache.core;
 
 import com.ch.cache.evict.IEvict;
+import com.ch.cache.expire.IExpire;
+import com.ch.cache.listener.IRemoveListener;
 import com.ch.cache.listener.ISlowListener;
 import com.ch.cache.persist.IPersist;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -19,5 +23,8 @@ public interface ICache<K,V> {
     IEvict<K,V> evict();
     IPersist persist();
     Set<Map.Entry<K,V>> entrySet();
-    public ISlowListener slowListener();
+    Set<K> keys();
+    Collection<V> values();
+    ISlowListener slowListener();
+    IExpire<K> expire();
 }

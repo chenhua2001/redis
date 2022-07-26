@@ -9,4 +9,5 @@ import java.lang.annotation.*;
 public @interface Intercept {
     boolean evict() default false;
     boolean aof() default false;
+    boolean refresh() default false;
 }

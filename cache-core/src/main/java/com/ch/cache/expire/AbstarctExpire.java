@@ -4,7 +4,10 @@ import com.ch.cache.core.ICache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Set;
 
 public abstract class AbstarctExpire<K> implements IExpire<K> {
 
@@ -31,5 +34,26 @@ public abstract class AbstarctExpire<K> implements IExpire<K> {
         limitRemoveSize=SLOWMODE_SIZE;
     }
 
+    @Override
+    public void refresh(Collection<K> keys,ICache cache) {
+        //看keyset大还是expireMap的set的大
+        Set<K> expireKeys = expireMap.keySet();
+        Iterator<K> iterator;
+        if(keys.size()>= expireKeys.size()){
+            iterator = expireKeys.iterator();
+        }
+        else {
+            iterator = keys.iterator();
+        }
+        while (iterator.hasNext()){
+            K key = iterator.next();
+            Long time = expireMap.get(key);
+            if(System.currentTimeMillis()>time){
+                logger.info("【刷新】：刷新移除了"+key);
+                cache.remove(key);
+                iterator.remove();
+            }
+        }
+    }
 
 }

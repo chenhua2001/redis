@@ -3,10 +3,9 @@ package com.ch.cache.core;
 import com.ch.cache.inteceptor.CacheInterceptor;
 import com.ch.cache.inteceptor.Intercept;
 import com.ch.cache.interceptor.CacheInterceptors;
-import com.ch.cache.interceptor.EvictInterceptor;
 import com.ch.cache.interceptor.PersistInterceptor;
+import com.ch.cache.interceptor.RefreshInterceptor;
 import com.ch.cache.listener.ISlowListener;
-import com.ch.cache.listener.SlowListener;
 import com.ch.cache.listener.SlowListenerContext;
 import com.ch.cache.model.CacheInterceptorContext;
 import com.ch.cache.model.CacheProxyContext;
@@ -14,7 +13,6 @@ import com.ch.cache.model.ICacheInterceptorContext;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.LinkedList;
 import java.util.List;
 
 public class CacheBS{
@@ -25,6 +23,7 @@ public class CacheBS{
 
     List<PersistInterceptor> persistInterceptors=CacheInterceptors.getPersistInterceptors();
 
+    List<RefreshInterceptor> refreshInterceptors=CacheInterceptors.getRefreshInterceptors();
 
     public Object invoke(CacheProxyContext context) throws InvocationTargetException, IllegalAccessException {
         Object[] args = context.args();
@@ -59,6 +58,9 @@ public class CacheBS{
             if(intercept.aof()){
                 persistInterceptors.forEach(persistInterceptor -> persistInterceptor.before(context));
             }
+            if(intercept.refresh()){
+                refreshInterceptors.forEach(refreshInterceptor -> refreshInterceptor.before(context));
+            }
         }
     }
 
@@ -70,6 +72,9 @@ public class CacheBS{
             }
             if(intercept.aof()){
                 persistInterceptors.forEach(persistInterceptor -> persistInterceptor.after(context));
+            }
+            if(intercept.refresh()){
+                refreshInterceptors.forEach(refreshInterceptor -> refreshInterceptor.after(context));
             }
 
         }
