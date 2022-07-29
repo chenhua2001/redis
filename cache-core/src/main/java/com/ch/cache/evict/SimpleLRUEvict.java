@@ -6,7 +6,7 @@ import com.ch.cache.model.CacheEvictContext;
 import com.ch.cache.model.EvictContext;
 import com.ch.cache.struct.ILinkedHashMap;
 
-public class SimpleLRUEvict<K,V> implements IEvict<K,V>{
+public class SimpleLRUEvict<K,V> implements IEvict<K,V>,IGetUpdated{
 
     ILinkedHashMap<K> linkedHashMap;
 

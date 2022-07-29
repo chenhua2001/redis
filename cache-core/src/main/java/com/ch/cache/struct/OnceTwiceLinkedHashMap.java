@@ -1,6 +1,6 @@
 package com.ch.cache.struct;
 
-public class OnceTwiceLinkedHashMap<K> {
+public class OnceTwiceLinkedHashMap<K> implements KeyCacheQueue<K>{
     /*
     * 访问过一次的key
     * */
@@ -18,6 +18,7 @@ public class OnceTwiceLinkedHashMap<K> {
     /*
     * 更新key的位置
     * */
+    @Override
     public void add(K key){
         if(once.containsKey(key)|| twice.containsKey(key)) {
             remove(key);
@@ -28,6 +29,7 @@ public class OnceTwiceLinkedHashMap<K> {
     /*
     * 从策略队列中删除key
     * */
+    @Override
     public void remove(K key){
         once.remove(key);
         twice.remove(key);

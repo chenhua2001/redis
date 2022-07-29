@@ -16,14 +16,13 @@ public class ILinkedHashMap<K> {
         return hashMap.containsKey(key);
     }
     public void remove(K key){
-        KeyNode<K> node = hashMap.get(key);
-        hashMap.remove(key);
+        KeyNode<K> node = hashMap.remove(key);
         if(node==null) return;
         KeyNode<K> next=node.next;
         KeyNode<K> pre=node.pre;
         pre.next=next;
         next.pre=pre;
-        node=null;
+        node=null;//help gc
     }
     public void add(K key){
         remove(key);

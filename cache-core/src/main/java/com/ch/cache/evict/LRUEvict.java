@@ -7,7 +7,7 @@ import com.ch.cache.model.EvictContext;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class LRUEvict<K,V> extends LinkedHashMap<K,V> implements IEvict<K,V>{
+public class LRUEvict<K,V> extends LinkedHashMap<K,V> implements IEvict<K,V>,IGetUpdated{
     /*
     * 最久的元素
     * */

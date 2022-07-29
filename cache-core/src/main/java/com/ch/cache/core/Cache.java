@@ -72,7 +72,6 @@ public class Cache<K,V> implements ICache<K,V>{
     @Intercept(evict = true,aof = true)
     @Override
     public void add(K key, V value) {
-
         CacheEvictContext<K,V> context=new CacheEvictContext<K,V>().cache(this).limitSize(limitSize).key(key);
         EvictContext<K, V> evictContext = this.evict.evict(context);
         if(evictContext!=null) {
@@ -86,9 +85,7 @@ public class Cache<K,V> implements ICache<K,V>{
                 }
             }
         }
-
         table.put(key,value);
-
     }
 
     @Override
@@ -191,9 +188,9 @@ public class Cache<K,V> implements ICache<K,V>{
     @Override
     public String toString() {
         return "Cache{" +
-                "table=" + table +
-                ", limitSize=" + limitSize +
-                ", evict=" + evict +
+                "table=" + table +"\n"+
+                ", limitSize=" + limitSize +"\n"+
+                ", evict=" + evict +"\n"+
                 '}';
     }
 }
